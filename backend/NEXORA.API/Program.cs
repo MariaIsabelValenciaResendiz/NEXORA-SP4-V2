@@ -1,3 +1,4 @@
+using NEXORA.API.Middleware;
 using NEXORA.Application;
 using NEXORA.Infrastructure;
 
@@ -15,6 +16,7 @@ builder.Services.AddCors(opciones =>
 
 var app = builder.Build();
 
+app.UseMiddleware<ManejoErroresMiddleware>();
 app.UseCors("Frontend");
 app.MapControllers();
 
