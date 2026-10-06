@@ -1,0 +1,33 @@
+.status-message {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.8rem;
+}
+
+.status-message__indicator {
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.status-message__text {
+  line-height: 1.4;
+}
+
+.status-message--success {
+  background-color: #e8f3ed;
+  color: #426c59;
+}
+
+.status-message--error {
+  background-color: #f7e5e5;
+  color: #a34f4f;
+}
+
+.status-message--info {
+  background-color: var(--nexora-etiqueta);
+  color: var(--nexora-petroleo);
+}

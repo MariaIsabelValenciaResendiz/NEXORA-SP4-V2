@@ -1,0 +1,28 @@
+.main-layout {
+  width: 100%;
+  max-width: 30rem;
+  min-height: 100dvh;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+
+  background-color: var(--nexora-marfil);
+}
+
+.main-layout__header {
+  padding: 1rem;
+}
+
+.main-layout__content {
+  width: 100%;
+  min-width: 0;
+  padding: 0 1rem 1rem;
+}
+
+.main-layout__navigation {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--nexora-blanco);
+}
