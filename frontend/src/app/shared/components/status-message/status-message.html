@@ -1,0 +1,23 @@
+@if (message) {
+  <div
+    class="status-message"
+    [class.status-message--success]="type === 'success'"
+    [class.status-message--error]="type === 'error'"
+    [class.status-message--info]="type === 'info'"
+    role="status"
+  >
+    <span class="status-message__indicator">
+      @if (type === 'success') {
+        OK
+      } @else if (type === 'error') {
+        !
+      } @else {
+        i
+      }
+    </span>
+
+    <span class="status-message__text">
+      {{ message }}
+    </span>
+  </div>
+}
