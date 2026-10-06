@@ -1,4 +1,5 @@
 <header class="app-header">
+
   <div class="app-header__brand">
     <div class="app-header__logo">
       N
@@ -9,7 +10,10 @@
     </span>
   </div>
 
-  <span class="app-header__role">
-    {{ role }}
-  </span>
+  @if (role) {
+    <span class="app-header__role">
+      {{ role }}
+    </span>
+  }
+
 </header>
