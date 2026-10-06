@@ -1,10 +1,13 @@
+using System.Text.Json.Serialization;
 using NEXORA.API.Middleware;
 using NEXORA.Application;
 using NEXORA.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opciones =>
+        opciones.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
 
