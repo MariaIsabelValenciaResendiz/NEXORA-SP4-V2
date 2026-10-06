@@ -1,0 +1,31 @@
+@if (items.length > 0) {
+
+  <nav
+    class="bottom-navigation"
+    aria-label="Navegación principal"
+  >
+
+    @for (item of items; track item.id) {
+
+      <button
+        type="button"
+        class="bottom-navigation__item"
+        [class.bottom-navigation__item--active]="item.id === activeItemId"
+        (click)="selectItem(item)"
+      >
+
+        <span class="bottom-navigation__icon">
+          {{ item.icon }}
+        </span>
+
+        <span class="bottom-navigation__label">
+          {{ item.label }}
+        </span>
+
+      </button>
+
+    }
+
+  </nav>
+
+}

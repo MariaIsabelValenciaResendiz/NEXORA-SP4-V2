@@ -1,5 +1,29 @@
-<main class="auth-layout">
-  <section class="auth-layout__content">
-    <router-outlet />
-  </section>
-</main>
+<div class="auth-layout">
+
+  <header class="auth-layout__header">
+    <app-header role="Visitante" />
+  </header>
+
+  <main class="auth-layout__main">
+
+    <section class="auth-layout__brand" aria-label="NEXORA">
+      <div class="auth-layout__logo">
+        N
+      </div>
+
+      <h1 class="auth-layout__name">
+        NEXORA
+      </h1>
+
+      <p class="auth-layout__tagline">
+        Tu mercado cotidiano
+      </p>
+    </section>
+
+    <section class="auth-layout__content">
+      <router-outlet />
+    </section>
+
+  </main>
+
+</div>

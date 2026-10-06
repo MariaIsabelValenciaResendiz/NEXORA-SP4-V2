@@ -1,0 +1,42 @@
+.app-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-header__logo {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: var(--nexora-petroleo);
+  color: var(--nexora-blanco);
+  font-weight: 700;
+}
+
+.app-header__name {
+  color: var(--nexora-petroleo);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.app-header__role {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background-color: var(--nexora-etiqueta);
+  color: var(--nexora-petroleo);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}

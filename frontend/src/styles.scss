@@ -1,3 +1,14 @@
+:root {
+  --nexora-petroleo: #294752;
+  --nexora-verde-mineral: #4f8f87;
+  --nexora-marfil: #fdfcf8;
+
+  --nexora-blanco: #ffffff;
+  --nexora-texto-secundario: #6b7478;
+  --nexora-borde: #e4e4e4;
+  --nexora-etiqueta: #f0ede4;
+}
+
 *,
 *::before,
 *::after {
@@ -13,6 +24,7 @@ body {
 body {
   min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--nexora-marfil);
 }
 
 button,

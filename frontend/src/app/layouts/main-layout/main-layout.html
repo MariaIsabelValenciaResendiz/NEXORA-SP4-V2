@@ -1,7 +1,21 @@
-<main class="auth-layout">
+<div class="main-layout">
 
-  <section class="auth-layout__content">
+  <header class="main-layout__header">
+    <app-header
+      [role]="role"
+    />
+  </header>
+
+  <main class="main-layout__content">
     <router-outlet />
-  </section>
+  </main>
 
-</main>
+  <footer class="main-layout__navigation">
+    <app-bottom-navigation
+      [items]="navigationItems"
+      [activeItemId]="activeNavigationId"
+      (itemSelected)="onNavigationSelected($event)"
+    />
+  </footer>
+
+</div>

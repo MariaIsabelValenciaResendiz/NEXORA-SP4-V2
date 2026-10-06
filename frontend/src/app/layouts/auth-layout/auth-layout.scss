@@ -1,8 +1,53 @@
 .auth-layout {
-  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background-color: var(--nexora-marfil);
+}
+
+.auth-layout__header {
+  padding: 1rem;
+}
+
+.auth-layout__main {
+  width: min(100%, 32rem);
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.auth-layout__brand {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.auth-layout__logo {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  background-color: var(--nexora-petroleo);
+  color: var(--nexora-blanco);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.auth-layout__name {
+  margin: 0.75rem 0 0;
+  color: var(--nexora-petroleo);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.auth-layout__tagline {
+  margin: 0.25rem 0 0;
+  color: var(--nexora-texto-secundario);
+  font-size: 0.8rem;
 }
 
 .auth-layout__content {
