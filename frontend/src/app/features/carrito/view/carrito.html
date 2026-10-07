@@ -1,0 +1,116 @@
+<section class="cart-page">
+  <div class="cart-page__heading">
+    <div>
+      <p class="cart-page__eyebrow">NEXORA MARKET</p>
+      <h1>Mi carrito</h1>
+    </div>
+    <span class="cart-page__role">{{ vm.rol() }}</span>
+  </div>
+
+  @if (vm.cargando()) {
+    <app-feedback-state
+      icon="…"
+      title="Cargando carrito"
+      message="Estamos consultando tus artículos."
+    />
+  } @else if (vm.error() && vm.articulos().length === 0) {
+    <app-feedback-state
+      icon="!"
+      title="No pudimos cargar el carrito"
+      [message]="vm.error()"
+      actionLabel="Reintentar"
+      tone="error"
+      (actionSelected)="vm.cargar()"
+    />
+  } @else if (vm.carritoVacio()) {
+    <div class="cart-empty" role="status">
+      <div class="cart-empty__icon" aria-hidden="true">🛒</div>
+      <h2>Tu carrito está vacío</h2>
+      <p>Explora el catálogo y agrega los productos que te interesen.</p>
+      <a routerLink="/catalogo">Explorar catálogo</a>
+    </div>
+    <div class="cart-summary cart-summary--empty">
+      <div class="cart-summary__total">
+        <span>Total</span>
+        <strong>{{ vm.total() | currency:'USD':'symbol':'1.2-2' }}</strong>
+      </div>
+      <button type="button" disabled>Proceder al pago</button>
+    </div>
+  } @else {
+    @if (vm.error()) {
+      <app-status-message [message]="vm.error()" type="error" />
+    }
+    @if (vm.mensaje()) {
+      <app-status-message [message]="vm.mensaje()" type="success" />
+    }
+
+    <div class="cart-content">
+      <div class="cart-items" aria-label="Artículos de tu carrito">
+        @for (articulo of vm.articulos(); track articulo.productoId) {
+          <article class="cart-item">
+            <div class="cart-item__image" aria-hidden="true">
+              @if (articulo.imagenUrl) {
+                <img [src]="articulo.imagenUrl" [alt]="" />
+              } @else {
+                <span>{{ articulo.nombre.slice(0, 1) }}</span>
+              }
+            </div>
+
+            <div class="cart-item__details">
+              <h2>{{ articulo.nombre }}</h2>
+              <p class="cart-item__unit-price">{{ articulo.precio | currency:'USD':'symbol':'1.2-2' }} por artículo</p>
+              <div class="cart-item__actions">
+                @if (vm.rol() === 'Cliente') {
+                  <div class="quantity-control" [attr.aria-label]="'Cantidad de ' + articulo.nombre">
+                    <button
+                      type="button"
+                      [attr.aria-label]="'Disminuir cantidad de ' + articulo.nombre"
+                      [disabled]="vm.actualizandoProductoId() !== null"
+                      (click)="vm.disminuir(articulo)"
+                    >−</button>
+                    <span aria-live="polite">{{ articulo.cantidad }}</span>
+                    <button
+                      type="button"
+                      [attr.aria-label]="'Aumentar cantidad de ' + articulo.nombre"
+                      [disabled]="vm.actualizandoProductoId() !== null"
+                      (click)="vm.aumentar(articulo)"
+                    >+</button>
+                  </div>
+                  <button
+                    class="cart-item__remove"
+                    type="button"
+                    [disabled]="vm.actualizandoProductoId() !== null"
+                    (click)="vm.eliminar(articulo)"
+                  >Eliminar</button>
+                } @else {
+                  <span class="cart-item__quantity">Cantidad: {{ articulo.cantidad }}</span>
+                }
+              </div>
+            </div>
+
+            <strong class="cart-item__subtotal">
+              {{ articulo.precio * articulo.cantidad | currency:'USD':'symbol':'1.2-2' }}
+            </strong>
+          </article>
+        }
+      </div>
+
+      <aside class="cart-summary" aria-label="Resumen de compra">
+        <h2>Resumen</h2>
+        <div class="cart-summary__row">
+          <span>Artículos</span>
+          <span>{{ vm.articulos().length }}</span>
+        </div>
+        <div class="cart-summary__total">
+          <span>Total</span>
+          <strong>{{ vm.total() | currency:'USD':'symbol':'1.2-2' }}</strong>
+        </div>
+        <button
+          type="button"
+          [disabled]="vm.carritoVacio() || vm.rol() !== 'Cliente' || vm.actualizandoProductoId() !== null"
+        >Proceder al pago</button>
+        <a routerLink="/catalogo">Seguir explorando</a>
+      </aside>
+    </div>
+  }
+</section>

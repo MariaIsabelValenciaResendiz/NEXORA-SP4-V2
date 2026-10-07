@@ -72,6 +72,7 @@
             >
               {{ vm.agregando() ? 'Añadiendo…' : 'Añadir al carrito' }}
             </button>
+            <a class="product-card__cart-link" routerLink="/carrito">Ver mi carrito</a>
           </div>
         } @else {
           <p class="product-card__readonly">El perfil Auditor puede consultar productos, pero no añadirlos al carrito.</p>

@@ -1,0 +1,281 @@
+:host {
+  display: block;
+}
+
+.cart-page {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+
+.cart-page__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.cart-page__eyebrow {
+  margin: 0 0 7px;
+  color: var(--nexora-verde-mineral);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cart-page h1 {
+  margin: 0;
+  color: var(--nexora-petroleo);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.cart-page__role {
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: #e0eee9;
+  color: var(--nexora-petroleo);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.cart-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 22px;
+}
+
+.cart-items {
+  display: grid;
+  gap: 14px;
+}
+
+.cart-item,
+.cart-summary,
+.cart-empty {
+  border: 1px solid var(--nexora-borde);
+  border-radius: 18px;
+  background: var(--nexora-blanco);
+  box-shadow: 0 14px 36px rgb(41 71 82 / 7%);
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+}
+
+.cart-item__image {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #e5eeea, #d2e2dc);
+  color: var(--nexora-petroleo);
+  font-size: 2rem;
+}
+
+.cart-item__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-item__details h2 {
+  margin: 0;
+  color: var(--nexora-petroleo);
+  font-size: 1.05rem;
+}
+
+.cart-item__unit-price,
+.cart-item__quantity {
+  margin: 6px 0 12px;
+  color: var(--nexora-texto-secundario);
+  font-size: 0.9rem;
+}
+
+.cart-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px;
+  border: 1px solid var(--nexora-borde);
+  border-radius: 999px;
+}
+
+.quantity-control button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf3f0;
+  color: var(--nexora-petroleo);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.quantity-control button:disabled,
+.cart-item__remove:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.cart-item__remove {
+  padding: 7px 0;
+  border: 0;
+  background: transparent;
+  color: #a03939;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.cart-item__subtotal {
+  align-self: start;
+  color: var(--nexora-petroleo);
+  white-space: nowrap;
+}
+
+.cart-summary {
+  position: static;
+  padding: 22px;
+}
+
+.cart-summary h2 {
+  margin: 0 0 20px;
+  color: var(--nexora-petroleo);
+  font-size: 1.1rem;
+}
+
+.cart-summary__row,
+.cart-summary__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cart-summary__row {
+  color: var(--nexora-texto-secundario);
+  font-size: 0.92rem;
+}
+
+.cart-summary__total {
+  margin: 17px 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--nexora-borde);
+  color: var(--nexora-petroleo);
+}
+
+.cart-summary__total strong {
+  font-size: 1.25rem;
+}
+
+.cart-summary > button {
+  width: 100%;
+  min-height: 46px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--nexora-petroleo);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.cart-summary > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.cart-summary > a {
+  display: block;
+  margin-top: 14px;
+  color: var(--nexora-petroleo);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cart-empty {
+  display: grid;
+  justify-items: center;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.cart-empty__icon {
+  display: grid;
+  width: 68px;
+  height: 68px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e5eeea;
+  font-size: 1.8rem;
+}
+
+.cart-empty h2 {
+  margin: 17px 0 5px;
+  color: var(--nexora-petroleo);
+  font-size: 1.25rem;
+}
+
+.cart-empty p {
+  margin: 0 0 18px;
+  color: var(--nexora-texto-secundario);
+}
+
+.cart-empty a {
+  display: inline-grid;
+  min-height: 44px;
+  place-items: center;
+  padding: 0 18px;
+  border-radius: 11px;
+  background: var(--nexora-petroleo);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.cart-summary--empty {
+  width: min(100%, 360px);
+  margin: 16px 0 0 auto;
+}
+
+@media (max-width: 520px) {
+  .cart-page {
+    padding: 24px 16px 36px;
+  }
+
+  .cart-item {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 13px;
+    padding: 14px;
+  }
+
+  .cart-item__image {
+    width: 72px;
+    height: 72px;
+  }
+
+  .cart-item__subtotal {
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .cart-item__actions {
+    flex-wrap: wrap;
+  }
+}
