@@ -6,5 +6,6 @@ public sealed record ProductoCatalogoDto(
     string ImagenUrl,
     decimal Precio,
     string Categoria,
-    string Descripcion
+    string Descripcion,
+    int Stock
 );

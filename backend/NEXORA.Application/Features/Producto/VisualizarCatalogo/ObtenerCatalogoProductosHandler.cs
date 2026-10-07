@@ -29,7 +29,8 @@ public sealed class ObtenerCatalogoProductosHandler
                 producto.ImagenUrl,
                 producto.Precio,
                 producto.Categoria,
-                producto.Descripcion
+                producto.Descripcion,
+                producto.Stock
             ))
             .ToList();
 
