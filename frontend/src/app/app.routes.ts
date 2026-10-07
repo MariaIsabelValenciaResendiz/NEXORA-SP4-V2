@@ -17,6 +17,12 @@ export const routes: Routes = [
     ]
   },
   {
+  path: 'historial',
+  loadChildren: () =>
+    import('./features/historial-carritos/historial-carritos.routes')
+      .then((m) => m.HISTORIAL_CARRITOS_ROUTES)
+},
+  {
     path: '',
     component: MainShell,
     canActivate: [sesionActivaGuard],
