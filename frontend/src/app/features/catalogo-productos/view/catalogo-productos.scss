@@ -1,0 +1,134 @@
+.catalogo {
+  width: 100%;
+}
+
+.catalogo__header {
+  margin-bottom: 1.25rem;
+}
+
+.catalogo__title {
+  margin: 0;
+  color: var(--nexora-petroleo);
+  font-size: 1.35rem;
+}
+
+.catalogo__subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--nexora-texto-secundario);
+  font-size: 0.8rem;
+}
+
+.catalogo__loading {
+  min-height: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--nexora-texto-secundario);
+  font-size: 0.8rem;
+}
+
+.catalogo__spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0.25rem solid var(--nexora-borde);
+  border-top-color: var(--nexora-verde-mineral);
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+.catalogo__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.product-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--nexora-borde);
+  border-radius: 0.85rem;
+  background-color: var(--nexora-blanco);
+}
+
+.product-card__image-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: var(--nexora-etiqueta);
+}
+
+.product-card__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.product-card__content {
+  padding: 0.8rem;
+}
+
+.product-card__category {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--nexora-etiqueta);
+  color: var(--nexora-petroleo);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.product-card__name {
+  margin: 0.55rem 0 0;
+  color: var(--nexora-petroleo);
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.product-card__price {
+  margin: 0.4rem 0;
+  color: var(--nexora-verde-mineral);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.product-card__description {
+  display: -webkit-box;
+  margin: 0.5rem 0 0;
+  overflow: hidden;
+  color: var(--nexora-texto-secundario);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.product-card__description--expanded {
+  display: block;
+  overflow: visible;
+}
+
+.product-card__more {
+  margin-top: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--nexora-verde-mineral);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 22rem) {
+  .catalogo__grid {
+    grid-template-columns: 1fr;
+  }
+}

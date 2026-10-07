@@ -7,16 +7,26 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthLayout,
-    children: []
+    children: [],
   },
   {
     path: '',
     component: MainLayout,
     children: [
       {
+        path: 'catalogo',
+        loadComponent: () =>
+          import('./features/catalogo-productos/view/catalogo-productos').then(
+            (m) => m.CatalogoProductos,
+          ),
+      },
+      {
         path: 'producto/:id',
-        loadComponent: () => import('./features/producto-detalle/view/producto-detalle').then(m => m.ProductoDetalle)
-      }
-    ]
-  }
+        loadComponent: () =>
+          import('./features/producto-detalle/view/producto-detalle').then(
+            (m) => m.ProductoDetalle,
+          ),
+      },
+    ],
+  },
 ];
