@@ -7,7 +7,13 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthLayout,
-    children: []
+    children: [
+      {
+        path: 'login',
+        loadComponent: () => import('./features/login/view/login').then(m => m.Login)
+      },
+      { path: '', pathMatch: 'full', redirectTo: 'login' }
+    ]
   },
   {
     path: '',
