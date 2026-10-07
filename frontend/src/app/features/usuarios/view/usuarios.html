@@ -1,0 +1,134 @@
+<section class="users-page">
+  <div class="users-heading">
+    <div>
+      <p>NEXORA MARKET</p>
+      <h1>Directorio de usuarios</h1>
+    </div>
+    <span>{{ vm.rol }}</span>
+  </div>
+
+  <app-status-message
+    type="info"
+    message="Consulta de solo lectura para Administrador y Auditor."
+  />
+
+  <form class="users-access" (ngSubmit)="vm.consultar()">
+    <label for="users-password">
+      Confirma tu contraseña para consultar
+    </label>
+
+    <div>
+      <input
+        id="users-password"
+        name="contrasena"
+        type="password"
+        autocomplete="current-password"
+        maxlength="200"
+        required
+        [ngModel]="vm.contrasena()"
+        (ngModelChange)="vm.contrasena.set($event)"
+        [disabled]="vm.cargando()"
+      />
+
+      <button type="submit" [disabled]="vm.cargando()">
+        {{ vm.consultado() ? 'Actualizar consulta' : 'Consultar usuarios' }}
+      </button>
+    </div>
+  </form>
+
+  @if (vm.cargando()) {
+    <div role="status" aria-live="polite">
+      <app-feedback-state
+        icon="…"
+        title="Cargando usuarios"
+        message="Estamos consultando el directorio."
+      />
+    </div>
+  } @else if (vm.error()) {
+    <div role="alert">
+      <app-feedback-state
+        title="No se pudo completar la consulta"
+        [message]="vm.error()"
+        actionLabel="Reintentar"
+        tone="error"
+        (actionSelected)="vm.consultar()"
+      />
+    </div>
+  } @else if (!vm.consultado()) {
+    <app-feedback-state
+      icon="i"
+      title="Consulta del directorio"
+      message="Confirma tu contraseña para obtener los usuarios."
+    />
+  } @else if (vm.usuarios().length === 0) {
+    <app-feedback-state
+      icon="U"
+      title="No hay usuarios"
+      message="Todavía no existen cuentas registradas."
+    />
+  } @else {
+    <div class="users-list">
+      @for (usuario of vm.usuarios(); track usuario.id) {
+        <article class="user-card">
+          <h2>
+            {{ usuario.nombreCompleto || 'Sin nombre registrado' }}
+          </h2>
+
+          <dl>
+            <dt>Usuario</dt>
+            <dd>{{ usuario.nombre }}</dd>
+
+            <dt>Correo</dt>
+            <dd>{{ usuario.correo || 'No registrado' }}</dd>
+
+            <dt>Teléfono</dt>
+            <dd>{{ usuario.telefono || 'No registrado' }}</dd>
+
+            <dt>Rol</dt>
+            <dd>{{ usuario.rol }}</dd>
+          </dl>
+
+          <button
+            type="button"
+            [attr.aria-expanded]="vm.expandidoId() === usuario.id"
+            [attr.aria-controls]="'address-' + usuario.id"
+            (click)="vm.alternarDetalle(usuario.id)"
+          >
+            {{ vm.expandidoId() === usuario.id
+              ? 'Ocultar dirección'
+              : 'Ver dirección' }}
+          </button>
+
+          @if (vm.expandidoId() === usuario.id) {
+            <div
+              class="user-address"
+              [id]="'address-' + usuario.id"
+            >
+              <p>
+                Ciudad:
+                {{ usuario.direccion.ciudad || 'No registrada' }}
+              </p>
+              <p>
+                Calle:
+                {{ usuario.direccion.calle || 'No registrada' }}
+              </p>
+              <p>Número: {{ usuario.direccion.numero }}</p>
+              <p>
+                Código postal:
+                {{ usuario.direccion.codigoPostal || 'No registrado' }}
+              </p>
+              <p>
+                Latitud:
+                {{ usuario.direccion.geolocalizacion.latitud || 'No registrada' }}
+              </p>
+              <p>
+                Longitud:
+                {{ usuario.direccion.geolocalizacion.longitud || 'No registrada' }}
+              </p>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>
