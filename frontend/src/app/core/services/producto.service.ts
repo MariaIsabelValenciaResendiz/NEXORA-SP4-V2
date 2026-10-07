@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Producto } from '../models/producto.model';
@@ -15,6 +15,20 @@ export class ProductoService {
   obtenerTodos(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.apiUrl);
   }
+
+  obtenerCategorias(): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${this.apiUrl}/categorias`
+    );
+  }
+
+  obtenerPorCategoria(categoria: string): Observable<Producto[]> {
+    const params = new HttpParams()
+      .set('categoria', categoria);
+
+    return this.http.get<Producto[]>(
+      `${this.apiUrl}/por-categoria`,
+      { params }
+    );
+  }
 }
-//Este servicio hace una sola cosa: consultar el backend de productos. 
-// No contiene lógica de vista, no filtra, no transforma datos y no duplica productos.
