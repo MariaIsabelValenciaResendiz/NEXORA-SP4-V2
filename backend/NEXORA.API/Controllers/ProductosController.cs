@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NEXORA.Application.Features.Producto.FiltrarPorCategoria;
 using NEXORA.Application.Features.Producto.VisualizarCatalogo;
 
 namespace NEXORA.API.Controllers;
@@ -20,6 +21,26 @@ public sealed class ProductosController : ControllerBase
     {
         var resultado = await _mediator.Send(
             new ObtenerCatalogoProductosQuery());
+
+        return Ok(resultado);
+    }
+
+    [HttpGet("categorias")]
+    public async Task<ActionResult<IReadOnlyList<string>>> ObtenerCategorias()
+    {
+        var resultado = await _mediator.Send(
+            new ObtenerCategoriasQuery());
+
+        return Ok(resultado);
+    }
+
+    [HttpGet("por-categoria")]
+    public async Task<ActionResult<IReadOnlyList<ProductoCatalogoDto>>> ObtenerPorCategoria(
+        [FromQuery] string? categoria)
+    {
+        var resultado = await _mediator.Send(
+            new ObtenerProductosPorCategoriaQuery(
+                categoria ?? string.Empty));
 
         return Ok(resultado);
     }
