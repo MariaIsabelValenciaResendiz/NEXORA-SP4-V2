@@ -3,7 +3,7 @@
 }
 
 .catalogo__header {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .catalogo__title {
@@ -16,6 +16,58 @@
   margin: 0.25rem 0 0;
   color: var(--nexora-texto-secundario);
   font-size: 0.8rem;
+}
+
+.catalogo__filtros {
+  margin-bottom: 1.25rem;
+}
+
+.catalogo__filtros-title {
+  margin: 0 0 0.65rem;
+  color: var(--nexora-petroleo);
+  font-size: 0.9rem;
+}
+
+.catalogo__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.catalogo__chip {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--nexora-borde);
+  border-radius: 999px;
+  background-color: var(--nexora-blanco);
+  color: var(--nexora-petroleo);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.catalogo__chip:hover {
+  border-color: var(--nexora-verde-mineral);
+}
+
+.catalogo__chip:focus-visible {
+  outline: 2px solid var(--nexora-verde-mineral);
+  outline-offset: 2px;
+}
+
+.catalogo__chip--active {
+  border-color: var(--nexora-verde-mineral);
+  background-color: var(--nexora-verde-mineral);
+  color: var(--nexora-blanco);
+}
+
+.catalogo__categorias-loading {
+  margin: 0;
+  color: var(--nexora-texto-secundario);
+  font-size: 0.75rem;
+}
+
+.catalogo__error-categorias {
+  margin-top: 0.75rem;
 }
 
 .catalogo__loading {
