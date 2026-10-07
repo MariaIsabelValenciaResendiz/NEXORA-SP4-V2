@@ -13,6 +13,28 @@ public class ProductoRepositoryMemoria : IProductoRepository
 
     public Producto? ObtenerPorId(int id)
     {
-        return ProductosDatosCrudos.Todos.FirstOrDefault(p => p.Id == id);
+        return ProductosDatosCrudos.Todos
+            .FirstOrDefault(producto => producto.Id == id);
+    }
+
+    public IReadOnlyList<string> ObtenerCategorias()
+    {
+        return ProductosDatosCrudos.Todos
+            .Select(producto => producto.Categoria)
+            .Where(categoria => !string.IsNullOrWhiteSpace(categoria))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(categoria => categoria)
+            .ToList();
+    }
+
+    public IReadOnlyList<Producto> ObtenerPorCategoria(string categoria)
+    {
+        return ProductosDatosCrudos.Todos
+            .Where(producto =>
+                string.Equals(
+                    producto.Categoria,
+                    categoria,
+                    StringComparison.OrdinalIgnoreCase))
+            .ToList();
     }
 }

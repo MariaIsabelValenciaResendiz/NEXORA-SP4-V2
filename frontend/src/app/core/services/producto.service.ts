@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -16,5 +16,15 @@ export class ProductoService {
 
   obtenerPorId(id: number): Observable<Producto> {
     return this.http.get<Producto>(`${this.apiUrl}/${id}`);
+  }
+
+  obtenerCategorias(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/categorias`);
+  }
+
+  obtenerPorCategoria(categoria: string): Observable<Producto[]> {
+    const params = new HttpParams().set('categoria', categoria);
+
+    return this.http.get<Producto[]>(`${this.apiUrl}/por-categoria`, { params });
   }
 }
