@@ -12,6 +12,11 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
-    children: []
+    children: [
+      {
+        path: 'producto/:id',
+        loadComponent: () => import('./features/producto-detalle/view/producto-detalle').then(m => m.ProductoDetalle)
+      }
+    ]
   }
 ];
