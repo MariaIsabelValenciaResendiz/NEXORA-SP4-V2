@@ -12,6 +12,14 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
-    children: []
+    children: [
+      {
+        path: 'catalogo',
+        loadComponent: () =>
+          import(
+            './features/catalogo-productos/view/catalogo-productos'
+          ).then((m) => m.CatalogoProductos)
+      }
+    ]
   }
 ];
