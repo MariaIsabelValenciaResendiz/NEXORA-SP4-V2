@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { sesionActivaGuard } from './core/guards/sesion-activa.guard';
 import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { MainLayout } from './layouts/main-layout/main-layout';
 
@@ -18,6 +19,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
+    canActivate: [sesionActivaGuard],
     children: []
   }
 ];
