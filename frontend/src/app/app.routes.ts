@@ -21,6 +21,10 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'carrito',
+        loadComponent: () => import('./features/carrito/view/carrito').then((m) => m.Carrito),
+      },
+      {
         path: 'producto/:id',
         loadComponent: () =>
           import('./features/producto-detalle/view/producto-detalle').then(

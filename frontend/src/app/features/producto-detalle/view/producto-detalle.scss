@@ -176,6 +176,15 @@
   opacity: 0.65;
 }
 
+.product-card__cart-link {
+  grid-column: 1 / -1;
+  justify-self: center;
+  color: var(--nexora-petroleo);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .product-card__readonly {
   margin: 25px 0 0;
   padding: 14px 16px;
