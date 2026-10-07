@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NEXORA.Application.Features.Producto.FiltrarPorCategoria;
 using NEXORA.Application.Features.Producto.VisualizarCatalogo;
 using NEXORA.Application.Features.Productos.ObtenerPorId;
 
@@ -32,10 +33,33 @@ public sealed class ProductosController : ControllerBase
         int id,
         CancellationToken cancellationToken)
     {
-        var respuesta = await _mediator.Send(
+        var resultado = await _mediator.Send(
             new ObtenerProductoPorIdQuery(id),
             cancellationToken);
 
-        return Ok(respuesta);
+        return Ok(resultado);
+    }
+
+    [HttpGet("categorias")]
+    public async Task<ActionResult<IReadOnlyList<string>>> ObtenerCategorias(
+        CancellationToken cancellationToken)
+    {
+        var resultado = await _mediator.Send(
+            new ObtenerCategoriasQuery(),
+            cancellationToken);
+
+        return Ok(resultado);
+    }
+
+    [HttpGet("por-categoria")]
+    public async Task<ActionResult<IReadOnlyList<ProductoCatalogoDto>>> ObtenerPorCategoria(
+        [FromQuery] string? categoria,
+        CancellationToken cancellationToken)
+    {
+        var resultado = await _mediator.Send(
+            new ObtenerProductosPorCategoriaQuery(categoria ?? string.Empty),
+            cancellationToken);
+
+        return Ok(resultado);
     }
 }
