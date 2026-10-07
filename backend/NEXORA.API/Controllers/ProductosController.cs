@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NEXORA.Application.Features.Producto.FiltrarPorCategoria;
 using NEXORA.Application.Features.Producto.VisualizarCatalogo;
+using NEXORA.Application.Features.Productos.ObtenerPorId;
 
 namespace NEXORA.API.Controllers;
 
@@ -17,30 +18,47 @@ public sealed class ProductosController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<ProductoCatalogoDto>>> ObtenerTodos()
+    public async Task<ActionResult<IReadOnlyList<ProductoCatalogoDto>>> ObtenerTodos(
+        CancellationToken cancellationToken)
     {
         var resultado = await _mediator.Send(
-            new ObtenerCatalogoProductosQuery());
+            new ObtenerCatalogoProductosQuery(),
+            cancellationToken);
+
+        return Ok(resultado);
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<ProductoDetalleResponse>> ObtenerPorId(
+        int id,
+        CancellationToken cancellationToken)
+    {
+        var resultado = await _mediator.Send(
+            new ObtenerProductoPorIdQuery(id),
+            cancellationToken);
 
         return Ok(resultado);
     }
 
     [HttpGet("categorias")]
-    public async Task<ActionResult<IReadOnlyList<string>>> ObtenerCategorias()
+    public async Task<ActionResult<IReadOnlyList<string>>> ObtenerCategorias(
+        CancellationToken cancellationToken)
     {
         var resultado = await _mediator.Send(
-            new ObtenerCategoriasQuery());
+            new ObtenerCategoriasQuery(),
+            cancellationToken);
 
         return Ok(resultado);
     }
 
     [HttpGet("por-categoria")]
     public async Task<ActionResult<IReadOnlyList<ProductoCatalogoDto>>> ObtenerPorCategoria(
-        [FromQuery] string? categoria)
+        [FromQuery] string? categoria,
+        CancellationToken cancellationToken)
     {
         var resultado = await _mediator.Send(
-            new ObtenerProductosPorCategoriaQuery(
-                categoria ?? string.Empty));
+            new ObtenerProductosPorCategoriaQuery(categoria ?? string.Empty),
+            cancellationToken);
 
         return Ok(resultado);
     }

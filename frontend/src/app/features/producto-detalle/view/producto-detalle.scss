@@ -1,0 +1,204 @@
+:host {
+  display: block;
+}
+
+.product-detail {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+
+.product-detail__heading,
+.product-card__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.product-detail__heading {
+  margin-bottom: 22px;
+}
+
+.product-detail__eyebrow,
+.product-card__category {
+  margin: 0 0 7px;
+  color: var(--nexora-verde-mineral);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.product-detail h1 {
+  margin: 0;
+  color: var(--nexora-petroleo);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.product-detail__role {
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: #e0eee9;
+  color: var(--nexora-petroleo);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.product-card {
+  overflow: hidden;
+  border: 1px solid var(--nexora-borde);
+  border-radius: 22px;
+  background: var(--nexora-blanco);
+  box-shadow: 0 18px 48px rgb(41 71 82 / 8%);
+}
+
+.product-card__visual {
+  display: grid;
+  min-height: 230px;
+  place-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #e5eeea, #d2e2dc);
+  color: var(--nexora-petroleo);
+  text-align: center;
+}
+
+.product-card__visual span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.product-card__visual strong {
+  display: grid;
+  width: 104px;
+  height: 104px;
+  place-items: center;
+  border: 1px solid rgb(41 71 82 / 12%);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 58%);
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+.product-card__content {
+  padding: 26px;
+}
+
+.product-card__title-row h2 {
+  margin: 0;
+  color: var(--nexora-petroleo);
+  font-size: clamp(1.35rem, 4vw, 1.8rem);
+}
+
+.product-card__price {
+  margin: 0;
+  color: var(--nexora-petroleo);
+  font-size: 1.35rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.product-card__description {
+  margin: 20px 0 8px;
+  color: #4e5b5e;
+  line-height: 1.65;
+}
+
+.product-card__stock {
+  margin: 0;
+  color: var(--nexora-texto-secundario);
+  font-size: 0.9rem;
+}
+
+.product-card__purchase {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.product-card__purchase > label {
+  color: var(--nexora-petroleo);
+  font-weight: 700;
+}
+
+.quantity-control {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  padding: 5px;
+  border: 1px solid var(--nexora-borde);
+  border-radius: 999px;
+}
+
+.quantity-control button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf3f0;
+  color: var(--nexora-petroleo);
+  cursor: pointer;
+  font-size: 1.15rem;
+}
+
+.quantity-control input {
+  width: 46px;
+  border: 0;
+  color: var(--nexora-petroleo);
+  text-align: center;
+}
+
+.quantity-control input:focus-visible,
+.quantity-control button:focus-visible,
+.product-card__add:focus-visible {
+  outline: 3px solid #8dbbb0;
+  outline-offset: 2px;
+}
+
+.product-card__add {
+  grid-column: 1 / -1;
+  min-height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--nexora-petroleo);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.product-card__add:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.product-card__readonly {
+  margin: 25px 0 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f2f4f1;
+  color: var(--nexora-texto-secundario);
+  line-height: 1.5;
+}
+
+@media (max-width: 560px) {
+  .product-detail {
+    padding: 24px 16px 36px;
+  }
+
+  .product-card__content {
+    padding: 20px;
+  }
+
+  .product-card__title-row {
+    display: block;
+  }
+
+  .product-card__price {
+    margin-top: 12px;
+  }
+}

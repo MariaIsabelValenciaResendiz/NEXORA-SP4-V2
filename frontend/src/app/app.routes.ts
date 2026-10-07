@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthLayout,
-    children: []
+    children: [],
   },
   {
     path: '',
@@ -16,10 +16,17 @@ export const routes: Routes = [
       {
         path: 'catalogo',
         loadComponent: () =>
-          import(
-            './features/catalogo-productos/view/catalogo-productos'
-          ).then((m) => m.CatalogoProductos)
-      }
-    ]
-  }
+          import('./features/catalogo-productos/view/catalogo-productos').then(
+            (m) => m.CatalogoProductos,
+          ),
+      },
+      {
+        path: 'producto/:id',
+        loadComponent: () =>
+          import('./features/producto-detalle/view/producto-detalle').then(
+            (m) => m.ProductoDetalle,
+          ),
+      },
+    ],
+  },
 ];
