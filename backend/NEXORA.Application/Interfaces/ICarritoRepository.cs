@@ -8,4 +8,5 @@ public interface ICarritoRepository
     IReadOnlyCollection<ArticuloCarrito> ObtenerPorCliente(int clienteId);
     ArticuloCarrito? ActualizarCantidad(int clienteId, int productoId, int cantidad);
     bool Eliminar(int clienteId, int productoId);
+    IReadOnlyCollection<Carrito> ObtenerHistorialGlobal();
 }
