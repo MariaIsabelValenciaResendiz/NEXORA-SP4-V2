@@ -8,6 +8,7 @@
     ← Regresar al catálogo
   </button>
 
+
   <div class="product-detail__heading">
 
     <div>
@@ -21,6 +22,7 @@
       </h1>
 
     </div>
+
 
     <span class="product-detail__role">
       {{ vm.rol() }}
@@ -77,6 +79,7 @@
               {{ producto.categoria }}
             </span>
 
+
             <h2>
               {{ producto.nombre }}
             </h2>
@@ -103,11 +106,11 @@
         </p>
 
 
-        <p class="product-card__stock">
-
+        <p
+          class="product-card__stock"
+        >
           Disponibles:
           {{ producto.stock }}
-
         </p>
 
 
@@ -190,8 +193,8 @@
 
 
             <button
-              class="product-card__add"
               type="button"
+              class="product-card__add"
               [disabled]="
                 vm.agregando() ||
                 vm.cargando()
@@ -211,14 +214,36 @@
 
           </div>
 
-        } @else {
+
+        } @else if (
+          vm.rol() === 'Auditor'
+        ) {
 
           <p
             class="product-card__readonly"
           >
-            El perfil Auditor puede consultar
-            productos, pero no añadirlos
+            El perfil Auditor puede
+            consultar la información
+            del producto, pero no puede
+            modificarlo ni añadirlo
             al carrito.
+          </p>
+
+
+        } @else if (
+          vm.rol() === 'Administrador'
+        ) {
+
+          <p
+            class="product-card__readonly"
+          >
+            El perfil Administrador puede
+            consultar la información
+            completa del producto.
+            Las acciones de edición y
+            eliminación se integrarán
+            mediante las funcionalidades
+            de gestión correspondientes.
           </p>
 
         }
