@@ -1,0 +1,43 @@
+<form class="login" novalidate (submit)="alEnviar($event)">
+
+  <div class="login__campo">
+    <label class="login__etiqueta" for="usuario">Usuario</label>
+    <input
+      #usuario
+      id="usuario"
+      class="login__input"
+      [class.login__input--error]="vm.nombreInvalido()"
+      type="text"
+      autocomplete="username"
+      [value]="vm.nombre()"
+      (input)="vm.nombre.set(usuario.value)"
+    />
+    @if (vm.nombreInvalido()) {
+      <p class="login__error">Revisa este campo</p>
+    }
+  </div>
+
+  <div class="login__campo">
+    <label class="login__etiqueta" for="contrasena">Contraseña</label>
+    <input
+      #contrasena
+      id="contrasena"
+      class="login__input"
+      [class.login__input--error]="vm.contrasenaInvalida()"
+      type="password"
+      autocomplete="current-password"
+      [value]="vm.contrasena()"
+      (input)="vm.contrasena.set(contrasena.value)"
+    />
+    @if (vm.contrasenaInvalida()) {
+      <p class="login__error">Revisa este campo</p>
+    }
+  </div>
+
+  <app-status-message [message]="vm.mensaje()" type="error" />
+
+  <button class="login__boton" type="submit" [disabled]="vm.cargando()">
+    Iniciar sesión
+  </button>
+
+</form>
