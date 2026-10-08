@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using NEXORA.Application.Features.Producto.FiltrarPorCategoria;
 using NEXORA.Application.Features.Producto.VisualizarCatalogo;
 using NEXORA.Application.Features.Productos.ObtenerPorId;
+using NEXORA.Application.Features.Producto.AgregarProducto;
+using NEXORA.API.Contracts.Productos;
 
 namespace NEXORA.API.Controllers;
 
@@ -26,6 +28,30 @@ public sealed class ProductosController : ControllerBase
             cancellationToken);
 
         return Ok(resultado);
+    }
+    [HttpPost]
+    public async Task<ActionResult<ProductoCreadoDto>> Agregar(
+        [FromBody] AgregarProductoRequest request,
+        CancellationToken cancellationToken)
+    {
+        var comando = new AgregarProductoCommand(
+            request.Titulo,
+            request.Precio,
+            request.Categoria,
+            request.ImagenUrl,
+            request.Descripcion
+        );
+
+        var resultado = await _mediator.Send(
+            comando,
+            cancellationToken
+        );
+
+        return CreatedAtAction(
+            nameof(ObtenerPorId),
+            new { id = resultado.Id },
+            resultado
+        );
     }
 
     [HttpGet("{id:int}")]
