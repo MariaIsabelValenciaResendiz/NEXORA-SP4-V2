@@ -12,4 +12,9 @@ public class UsuarioRepositoryMemoria : IUsuarioRepository
             string.Equals(u.Nombre, nombre, StringComparison.OrdinalIgnoreCase)
             && u.Contrasena == contrasena);
     }
+
+    public IReadOnlyList<Usuario> ObtenerTodos()
+    {
+        return UsuariosDatosCrudos.Todos;
+    }
 }

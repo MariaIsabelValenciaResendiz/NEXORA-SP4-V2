@@ -9,7 +9,8 @@ public sealed class CarritoRepositoryMemoria : ICarritoRepository
     public ArticuloCarrito AgregarOIncrementar(ArticuloCarrito articulo)
     {
         lock (CarritoDatosCrudos.Bloqueo)
-        {
+        { 
+            CrearCarritoSiNoExiste(articulo.ClienteId);
             var clave = (articulo.ClienteId, articulo.ProductoId);
 
             if (CarritoDatosCrudos.Articulos.TryGetValue(clave, out var existente))
@@ -17,6 +18,7 @@ public sealed class CarritoRepositoryMemoria : ICarritoRepository
                 existente.Cantidad += articulo.Cantidad;
                 return Copiar(existente);
             }
+            
 
             var nuevo = Copiar(articulo);
             CarritoDatosCrudos.Articulos.Add(clave, nuevo);
@@ -56,6 +58,41 @@ public sealed class CarritoRepositoryMemoria : ICarritoRepository
             return CarritoDatosCrudos.Articulos.Remove((clienteId, productoId));
         }
     }
+    public IReadOnlyCollection<Carrito> ObtenerHistorialGlobal()
+{
+    lock (CarritoDatosCrudos.Bloqueo)
+    {
+        return CarritoDatosCrudos.Carritos.Values
+            .OrderByDescending(carrito => carrito.Id)
+            .Select(carrito => new Carrito
+            {
+                Id = carrito.Id,
+                ClienteId = carrito.ClienteId,
+                FechaCreacion = carrito.FechaCreacion,
+                Articulos = CarritoDatosCrudos.Articulos.Values
+                    .Where(articulo => articulo.ClienteId == carrito.ClienteId)
+                    .OrderBy(articulo => articulo.ProductoId)
+                    .Select(Copiar)
+                    .ToArray()
+            })
+            .ToArray();
+    }
+}
+
+private static void CrearCarritoSiNoExiste(int clienteId)
+{
+    if (CarritoDatosCrudos.Carritos.ContainsKey(clienteId))
+    {
+        return;
+    }
+
+    CarritoDatosCrudos.Carritos.Add(clienteId, new Carrito
+    {
+        Id = CarritoDatosCrudos.SiguienteCarritoId++,
+        ClienteId = clienteId,
+        FechaCreacion = DateTimeOffset.UtcNow
+    });
+}
 
     private static ArticuloCarrito Copiar(ArticuloCarrito articulo)
     {

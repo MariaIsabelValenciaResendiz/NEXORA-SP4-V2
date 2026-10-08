@@ -1,0 +1,109 @@
+<section class="history-page">
+  <div class="history-heading">
+    <div>
+      <p class="history-eyebrow">NEXORA MARKET</p>
+      <h1>Historial global de carritos</h1>
+      <p>Consulta los carritos de los clientes. Esta pantalla es de solo lectura.</p>
+    </div>
+    <span class="history-role">{{ vm.rol }}</span>
+  </div>
+
+  <form class="history-access" (ngSubmit)="vm.consultar()">
+    <label for="history-password">Confirma tu contraseña para consultar</label>
+    <div class="history-access__controls">
+      <input
+        id="history-password"
+        name="contrasena"
+        type="password"
+        autocomplete="current-password"
+        maxlength="200"
+        required
+        [ngModel]="vm.contrasena()"
+        (ngModelChange)="vm.contrasena.set($event)"
+        [disabled]="vm.cargando()"
+      />
+      <button type="submit" [disabled]="vm.cargando()">
+        {{ vm.consultado() ? 'Actualizar consulta' : 'Consultar carritos' }}
+      </button>
+    </div>
+  </form>
+
+  @if (vm.cargando()) {
+    <app-feedback-state
+      icon="…"
+      title="Cargando carritos"
+      message="Estamos consultando los carritos del sistema."
+    />
+  } @else if (vm.error()) {
+    <app-feedback-state
+      icon="!"
+      title="No se pudo completar la consulta"
+      [message]="vm.error()"
+      actionLabel="Reintentar"
+      tone="error"
+      (actionSelected)="vm.consultar()"
+    />
+  } @else if (!vm.consultado()) {
+    <app-feedback-state
+      icon="i"
+      title="Consulta de Administrador y Auditor"
+      message="Confirma tu contraseña para obtener la información del backend."
+    />
+  } @else if (vm.carritos().length === 0) {
+    <app-feedback-state
+      icon="C"
+      title="Todavía no hay carritos"
+      message="Los carritos aparecerán cuando los clientes agreguen su primer producto."
+    />
+  } @else {
+    <div class="history-list">
+      @for (carrito of vm.carritos(); track carrito.id) {
+        <article class="history-card">
+          <h2>Carrito #{{ carrito.id }}</h2>
+          <p>Usuario propietario: #{{ carrito.userId }}</p>
+          <p>Creado: {{ carrito.date | date:'dd/MM/yyyy HH:mm' }}</p>
+          <button
+            type="button"
+            [attr.aria-expanded]="vm.expandidoId() === carrito.id"
+            [attr.aria-controls]="'products-' + carrito.id"
+            (click)="vm.alternarDetalle(carrito.id)"
+          >
+            {{ vm.expandidoId() === carrito.id ? 'Ocultar productos' : 'Ver productos' }}
+          </button>
+
+          @if (vm.expandidoId() === carrito.id) {
+            <div class="history-products" [id]="'products-' + carrito.id">
+              @if (carrito.products.length === 0) {
+                <app-feedback-state
+                  icon="C"
+                  title="Carrito sin productos"
+                  message="El cliente ha retirado todos los productos de este carrito."
+                />
+              } @else {
+                <table>
+                  <caption>Productos del carrito #{{ carrito.id }}</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Producto</th>
+                      <th scope="col">Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (producto of carrito.products; track producto.productId) {
+                      <tr>
+                        <td>{{ producto.productId }}</td>
+                        <td>{{ producto.title }}</td>
+                        <td>{{ producto.quantity }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>
