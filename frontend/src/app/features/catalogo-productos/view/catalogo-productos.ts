@@ -35,8 +35,7 @@ export class CatalogoProductos implements OnInit {
     inject(CatalogoProductosViewModel);
 
   ngOnInit(): void {
-    this.viewModel.cargarCategorias();
-    this.viewModel.cargarProductos();
+    this.viewModel.inicializar();
   }
 
   onImageError(event: Event): void {

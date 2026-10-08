@@ -1,12 +1,13 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { finalize, Subscription } from 'rxjs';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Producto } from '../../../core/models/producto.model';
 import { ProductoService } from '../../../core/services/producto.service';
-import { Router } from '@angular/router';
 import { SessionService } from '../../../core/services/session.service';
 
 @Injectable()
@@ -14,19 +15,18 @@ export class CatalogoProductosViewModel {
   private readonly productoService = inject(ProductoService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly sessionService = inject(SessionService);
 
   private solicitudProductos?: Subscription;
   private numeroSolicitudProductos = 0;
 
   readonly productos = signal<Producto[]>([]);
-
   readonly categorias = signal<string[]>([]);
 
   readonly categoriaSeleccionada = signal<string | null>(null);
 
   readonly cargando = signal(false);
-
   readonly error = signal<string | null>(null);
 
   readonly cargandoCategorias = signal(false);
@@ -37,8 +37,22 @@ export class CatalogoProductosViewModel {
 
   readonly puedeCrearProductos = this.sessionService.obtener()?.rol === 'Administrador';
 
+  inicializar(): void {
+    this.cargarCategorias();
+
+    const categoria = this.route.snapshot.queryParamMap.get('categoria')?.trim();
+
+    if (categoria) {
+      this.categoriaSeleccionada.set(categoria);
+      this.consultarProductos(categoria);
+      return;
+    }
+
+    this.cargarProductos();
+  }
+
   irANuevoProducto(): void {
-    this.router.navigateByUrl('/productos/nuevo');
+    void this.router.navigateByUrl('/productos/nuevo');
   }
 
   cargarCategorias(): void {
@@ -59,6 +73,7 @@ export class CatalogoProductosViewModel {
         next: (categorias) => {
           this.categorias.set(categorias);
         },
+
         error: () => {
           this.categorias.set([]);
 
@@ -81,12 +96,39 @@ export class CatalogoProductosViewModel {
 
     this.categoriaSeleccionada.set(categoriaNormalizada);
 
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        categoria: categoriaNormalizada,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+
     this.consultarProductos(categoriaNormalizada);
   }
 
   verTodos(): void {
     this.categoriaSeleccionada.set(null);
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        categoria: null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+
     this.consultarProductos(null);
+  }
+
+  abrirDetalle(idProducto: number): void {
+    const categoria = this.categoriaSeleccionada();
+
+    void this.router.navigate(['/producto', idProducto], {
+      queryParams: categoria ? { categoria } : {},
+    });
   }
 
   reintentar(): void {
