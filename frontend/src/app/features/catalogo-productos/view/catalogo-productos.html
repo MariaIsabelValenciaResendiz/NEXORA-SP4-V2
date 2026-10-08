@@ -100,6 +100,7 @@
         Cargando productos...
       </p>
     </section>
+
   } @else if (viewModel.error()) {
     <app-feedback-state
       icon="!"
@@ -109,6 +110,7 @@
       tone="error"
       (actionSelected)="viewModel.reintentar()"
     />
+
   } @else if (
     viewModel.productos().length === 0
   ) {
@@ -142,9 +144,7 @@
       ) {
         <article class="product-card">
 
-          <div
-            class="product-card__image-container"
-          >
+          <div class="product-card__image-container">
             <img
               class="product-card__image"
               [src]="
@@ -159,9 +159,7 @@
 
           <div class="product-card__content">
 
-            <span
-              class="product-card__category"
-            >
+            <span class="product-card__category">
               {{ producto.categoria }}
             </span>
 
@@ -212,6 +210,18 @@
                 }
               </button>
             }
+
+            <button
+              type="button"
+              class="product-card__detail"
+              (click)="
+                viewModel.abrirDetalle(
+                  producto.id
+                )
+              "
+            >
+              Ver detalle
+            </button>
 
           </div>
         </article>
