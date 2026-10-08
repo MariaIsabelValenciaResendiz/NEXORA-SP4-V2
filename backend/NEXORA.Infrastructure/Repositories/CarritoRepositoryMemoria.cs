@@ -24,6 +24,39 @@ public sealed class CarritoRepositoryMemoria : ICarritoRepository
         }
     }
 
+    public IReadOnlyCollection<ArticuloCarrito> ObtenerPorCliente(int clienteId)
+    {
+        lock (CarritoDatosCrudos.Bloqueo)
+        {
+            return CarritoDatosCrudos.Articulos.Values
+                .Where(articulo => articulo.ClienteId == clienteId)
+                .Select(Copiar)
+                .ToArray();
+        }
+    }
+
+    public ArticuloCarrito? ActualizarCantidad(int clienteId, int productoId, int cantidad)
+    {
+        lock (CarritoDatosCrudos.Bloqueo)
+        {
+            if (!CarritoDatosCrudos.Articulos.TryGetValue((clienteId, productoId), out var articulo))
+            {
+                return null;
+            }
+
+            articulo.Cantidad = cantidad;
+            return Copiar(articulo);
+        }
+    }
+
+    public bool Eliminar(int clienteId, int productoId)
+    {
+        lock (CarritoDatosCrudos.Bloqueo)
+        {
+            return CarritoDatosCrudos.Articulos.Remove((clienteId, productoId));
+        }
+    }
+
     private static ArticuloCarrito Copiar(ArticuloCarrito articulo)
     {
         return new ArticuloCarrito

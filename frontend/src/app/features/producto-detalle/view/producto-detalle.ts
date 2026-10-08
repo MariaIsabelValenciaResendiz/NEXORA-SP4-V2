@@ -8,6 +8,10 @@ import {
 } from '@angular/core';
 
 import {
+  RouterLink
+} from '@angular/router';
+
+import {
   FeedbackState
 } from '../../../shared/components/feedback-state/feedback-state';
 
@@ -19,12 +23,14 @@ import {
   ProductoDetalleViewModel
 } from '../view-model/producto-detalle-view-model';
 
+
 @Component({
   selector: 'app-producto-detalle',
 
   imports: [
     CommonModule,
     FeedbackState,
+    RouterLink,
     StatusMessage
   ],
 
@@ -36,14 +42,18 @@ import {
   styleUrl: './producto-detalle.scss'
 })
 export class ProductoDetalle {
+
   readonly vm =
     inject(ProductoDetalleViewModel);
+
 
   onImageError(
     event: Event
   ): void {
+
     const imagen =
       event.target as HTMLImageElement;
+
 
     if (
       imagen.dataset[
@@ -53,9 +63,11 @@ export class ProductoDetalle {
       return;
     }
 
+
     imagen.dataset[
       'fallbackAplicado'
     ] = 'true';
+
 
     imagen.src =
       '/images/producto-placeholder.svg';
