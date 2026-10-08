@@ -1,0 +1,83 @@
+.cuenta {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-height: 100%;
+}
+
+.cuenta__titulo {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #2f4858;
+}
+
+.cuenta__perfil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cuenta__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: #dbe7e4;
+  color: #457b73;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.cuenta__nombre {
+  margin: 0.5rem 0 0;
+  font-weight: 700;
+  color: #2f4858;
+}
+
+.cuenta__correo {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #6b7f88;
+}
+
+.cuenta__datos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.cuenta__fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border: 1px solid #d9dedb;
+  border-radius: 0.9rem;
+  background: #ffffff;
+  font-size: 0.85rem;
+
+  dt {
+    color: #6b7f88;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 700;
+    color: #2f4858;
+  }
+}
+
+.cuenta__cerrar {
+  margin-top: auto;
+  padding: 1rem;
+  border: 0;
+  border-radius: 0.9rem;
+  background: #ad6b6b;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
