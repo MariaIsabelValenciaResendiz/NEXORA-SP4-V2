@@ -34,7 +34,7 @@
     }
   </div>
 
-  <app-status-message [message]="vm.mensaje()" type="error" />
+  <app-status-message [message]="vm.mensaje()" [type]="vm.tipoMensaje()" />
 
   <button class="login__boton" type="submit" [disabled]="vm.cargando()">
     Iniciar sesión
