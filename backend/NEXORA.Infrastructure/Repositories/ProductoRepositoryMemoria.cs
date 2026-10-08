@@ -4,37 +4,37 @@ using NEXORA.Infrastructure.Persistence;
 
 namespace NEXORA.Infrastructure.Repositories;
 
-public class ProductoRepositoryMemoria : IProductoRepository
+public class ProductoRepositoryMemoria
+    : IProductoRepository,
+      IProductoEscrituraRepository
 {
     public IReadOnlyList<Producto> ObtenerTodos()
     {
-        return ProductosDatosCrudos.Todos;
+        return ProductoMemoriaStore.ObtenerTodos();
     }
 
     public Producto? ObtenerPorId(int id)
     {
-        return ProductosDatosCrudos.Todos
-            .FirstOrDefault(producto => producto.Id == id);
+        return ProductoMemoriaStore.ObtenerPorId(id);
     }
 
     public IReadOnlyList<string> ObtenerCategorias()
     {
-        return ProductosDatosCrudos.Todos
-            .Select(producto => producto.Categoria)
-            .Where(categoria => !string.IsNullOrWhiteSpace(categoria))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(categoria => categoria)
-            .ToList();
+        return ProductoMemoriaStore.ObtenerCategorias();
     }
 
-    public IReadOnlyList<Producto> ObtenerPorCategoria(string categoria)
+    public IReadOnlyList<Producto> ObtenerPorCategoria(
+        string categoria)
     {
-        return ProductosDatosCrudos.Todos
-            .Where(producto =>
-                string.Equals(
-                    producto.Categoria,
-                    categoria,
-                    StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        return ProductoMemoriaStore.ObtenerPorCategoria(
+            categoria
+        );
+    }
+
+    public Producto Agregar(Producto producto)
+    {
+        return ProductoMemoriaStore.Agregar(
+            producto
+        );
     }
 }
