@@ -1,26 +1,14 @@
-import {
-  DestroyRef,
-  inject,
-  Injectable,
-  signal
-} from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {
-  finalize,
-  Subscription
-} from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
-import {
-  takeUntilDestroyed
-} from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Producto } from '../../../core/models/producto.model';
 import { ProductoService } from '../../../core/services/producto.service';
+import { SessionService } from '../../../core/services/session.service';
 
 @Injectable()
 export class CatalogoProductosViewModel {
@@ -28,6 +16,7 @@ export class CatalogoProductosViewModel {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly sessionService = inject(SessionService);
 
   private solicitudProductos?: Subscription;
   private numeroSolicitudProductos = 0;
@@ -35,27 +24,23 @@ export class CatalogoProductosViewModel {
   readonly productos = signal<Producto[]>([]);
   readonly categorias = signal<string[]>([]);
 
-  readonly categoriaSeleccionada =
-    signal<string | null>(null);
+  readonly categoriaSeleccionada = signal<string | null>(null);
 
   readonly cargando = signal(false);
   readonly error = signal<string | null>(null);
 
   readonly cargandoCategorias = signal(false);
 
-  readonly errorCategorias =
-    signal<string | null>(null);
+  readonly errorCategorias = signal<string | null>(null);
 
-  readonly descripcionesExpandidas =
-    signal<ReadonlySet<number>>(new Set<number>());
+  readonly descripcionesExpandidas = signal<ReadonlySet<number>>(new Set<number>());
+
+  readonly puedeCrearProductos = this.sessionService.obtener()?.rol === 'Administrador';
 
   inicializar(): void {
     this.cargarCategorias();
 
-    const categoria =
-      this.route.snapshot.queryParamMap
-        .get('categoria')
-        ?.trim();
+    const categoria = this.route.snapshot.queryParamMap.get('categoria')?.trim();
 
     if (categoria) {
       this.categoriaSeleccionada.set(categoria);
@@ -64,6 +49,10 @@ export class CatalogoProductosViewModel {
     }
 
     this.cargarProductos();
+  }
+
+  irANuevoProducto(): void {
+    void this.router.navigateByUrl('/productos/nuevo');
   }
 
   cargarCategorias(): void {
@@ -78,9 +67,7 @@ export class CatalogoProductosViewModel {
       .obtenerCategorias()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() =>
-          this.cargandoCategorias.set(false)
-        )
+        finalize(() => this.cargandoCategorias.set(false)),
       )
       .subscribe({
         next: (categorias) => {
@@ -90,10 +77,8 @@ export class CatalogoProductosViewModel {
         error: () => {
           this.categorias.set([]);
 
-          this.errorCategorias.set(
-            'No fue posible cargar las categorías. Intenta nuevamente.'
-          );
-        }
+          this.errorCategorias.set('No fue posible cargar las categorías. Intenta nuevamente.');
+        },
       });
   }
 
@@ -103,29 +88,24 @@ export class CatalogoProductosViewModel {
   }
 
   seleccionarCategoria(categoria: string): void {
-    const categoriaNormalizada =
-      categoria.trim();
+    const categoriaNormalizada = categoria.trim();
 
     if (!categoriaNormalizada) {
       return;
     }
 
-    this.categoriaSeleccionada.set(
-      categoriaNormalizada
-    );
+    this.categoriaSeleccionada.set(categoriaNormalizada);
 
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        categoria: categoriaNormalizada
+        categoria: categoriaNormalizada,
       },
       queryParamsHandling: 'merge',
-      replaceUrl: true
+      replaceUrl: true,
     });
 
-    this.consultarProductos(
-      categoriaNormalizada
-    );
+    this.consultarProductos(categoriaNormalizada);
   }
 
   verTodos(): void {
@@ -134,59 +114,41 @@ export class CatalogoProductosViewModel {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        categoria: null
+        categoria: null,
       },
       queryParamsHandling: 'merge',
-      replaceUrl: true
+      replaceUrl: true,
     });
 
     this.consultarProductos(null);
   }
 
   abrirDetalle(idProducto: number): void {
-    const categoria =
-      this.categoriaSeleccionada();
+    const categoria = this.categoriaSeleccionada();
 
-    void this.router.navigate(
-      ['/producto', idProducto],
-      {
-        queryParams: categoria
-          ? { categoria }
-          : {}
-      }
-    );
+    void this.router.navigate(['/producto', idProducto], {
+      queryParams: categoria ? { categoria } : {},
+    });
   }
 
   reintentar(): void {
-    this.consultarProductos(
-      this.categoriaSeleccionada()
-    );
+    this.consultarProductos(this.categoriaSeleccionada());
   }
 
   reintentarCategorias(): void {
     this.cargarCategorias();
   }
 
-  descripcionEsLarga(
-    descripcion: string
-  ): boolean {
+  descripcionEsLarga(descripcion: string): boolean {
     return descripcion.length > 100;
   }
 
-  estaDescripcionExpandida(
-    idProducto: number
-  ): boolean {
-    return this.descripcionesExpandidas()
-      .has(idProducto);
+  estaDescripcionExpandida(idProducto: number): boolean {
+    return this.descripcionesExpandidas().has(idProducto);
   }
 
-  alternarDescripcion(
-    idProducto: number
-  ): void {
-    const actualizadas =
-      new Set(
-        this.descripcionesExpandidas()
-      );
+  alternarDescripcion(idProducto: number): void {
+    const actualizadas = new Set(this.descripcionesExpandidas());
 
     if (actualizadas.has(idProducto)) {
       actualizadas.delete(idProducto);
@@ -194,16 +156,11 @@ export class CatalogoProductosViewModel {
       actualizadas.add(idProducto);
     }
 
-    this.descripcionesExpandidas.set(
-      actualizadas
-    );
+    this.descripcionesExpandidas.set(actualizadas);
   }
 
-  private consultarProductos(
-    categoria: string | null
-  ): void {
-    const numeroSolicitud =
-      ++this.numeroSolicitudProductos;
+  private consultarProductos(categoria: string | null): void {
+    const numeroSolicitud = ++this.numeroSolicitudProductos;
 
     this.solicitudProductos?.unsubscribe();
 
@@ -211,64 +168,45 @@ export class CatalogoProductosViewModel {
     this.error.set(null);
     this.cargando.set(true);
 
-    this.descripcionesExpandidas.set(
-      new Set<number>()
-    );
+    this.descripcionesExpandidas.set(new Set<number>());
 
     const consulta$ =
       categoria === null
         ? this.productoService.obtenerTodos()
-        : this.productoService
-            .obtenerPorCategoria(categoria);
+        : this.productoService.obtenerPorCategoria(categoria);
 
-    this.solicitudProductos =
-      consulta$
-        .pipe(
-          takeUntilDestroyed(
-            this.destroyRef
-          )
-        )
-        .subscribe({
-          next: (productos) => {
-            if (
-              numeroSolicitud !==
-              this.numeroSolicitudProductos
-            ) {
-              return;
-            }
+    this.solicitudProductos = consulta$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (productos) => {
+        if (numeroSolicitud !== this.numeroSolicitudProductos) {
+          return;
+        }
 
-            this.productos.set(productos);
-          },
+        this.productos.set(productos);
+      },
 
-          error: () => {
-            if (
-              numeroSolicitud !==
-              this.numeroSolicitudProductos
-            ) {
-              return;
-            }
+      error: () => {
+        if (numeroSolicitud !== this.numeroSolicitudProductos) {
+          return;
+        }
 
-            this.productos.set([]);
+        this.productos.set([]);
 
-            this.error.set(
-              categoria === null
-                ? 'No fue posible cargar los productos. Intenta nuevamente.'
-                : `No fue posible cargar los productos de ${categoria}. Intenta nuevamente.`
-            );
+        this.error.set(
+          categoria === null
+            ? 'No fue posible cargar los productos. Intenta nuevamente.'
+            : `No fue posible cargar los productos de ${categoria}. Intenta nuevamente.`,
+        );
 
-            this.cargando.set(false);
-          },
+        this.cargando.set(false);
+      },
 
-          complete: () => {
-            if (
-              numeroSolicitud !==
-              this.numeroSolicitudProductos
-            ) {
-              return;
-            }
+      complete: () => {
+        if (numeroSolicitud !== this.numeroSolicitudProductos) {
+          return;
+        }
 
-            this.cargando.set(false);
-          }
-        });
+        this.cargando.set(false);
+      },
+    });
   }
 }

@@ -1,13 +1,27 @@
 <section class="catalogo">
   <header class="catalogo__header">
-    <h1 class="catalogo__title">
-      Catálogo
-    </h1>
+  <div class="catalogo__header-content">
+    <div>
+      <h1 class="catalogo__title">
+        Catálogo
+      </h1>
 
-    <p class="catalogo__subtitle">
-      Productos disponibles
-    </p>
-  </header>
+      <p class="catalogo__subtitle">
+        Productos disponibles
+      </p>
+    </div>
+
+    @if (viewModel.puedeCrearProductos) {
+      <button
+        type="button"
+        class="catalogo__nuevo-producto"
+        (click)="viewModel.irANuevoProducto()"
+      >
+        + Nuevo producto
+      </button>
+    }
+  </div>
+</header>
 
   <section
     class="catalogo__filtros"
