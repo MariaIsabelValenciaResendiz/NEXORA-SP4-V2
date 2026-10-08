@@ -1,0 +1,6 @@
+<app-main-layout
+  [role]="vm.rol"
+  [navigationItems]="vm.menu"
+  [activeNavigationId]="vm.itemActivo()"
+  (navigationSelected)="vm.seleccionar($event)"
+/>
