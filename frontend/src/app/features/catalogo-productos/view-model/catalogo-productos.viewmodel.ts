@@ -6,6 +6,11 @@ import {
 } from '@angular/core';
 
 import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
+
+import {
   finalize,
   Subscription
 } from 'rxjs';
@@ -21,30 +26,45 @@ import { ProductoService } from '../../../core/services/producto.service';
 export class CatalogoProductosViewModel {
   private readonly productoService = inject(ProductoService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   private solicitudProductos?: Subscription;
   private numeroSolicitudProductos = 0;
 
   readonly productos = signal<Producto[]>([]);
-
   readonly categorias = signal<string[]>([]);
 
   readonly categoriaSeleccionada =
     signal<string | null>(null);
 
   readonly cargando = signal(false);
+  readonly error = signal<string | null>(null);
 
-  readonly error =
-    signal<string | null>(null);
-
-  readonly cargandoCategorias =
-    signal(false);
+  readonly cargandoCategorias = signal(false);
 
   readonly errorCategorias =
     signal<string | null>(null);
 
   readonly descripcionesExpandidas =
     signal<ReadonlySet<number>>(new Set<number>());
+
+  inicializar(): void {
+    this.cargarCategorias();
+
+    const categoria =
+      this.route.snapshot.queryParamMap
+        .get('categoria')
+        ?.trim();
+
+    if (categoria) {
+      this.categoriaSeleccionada.set(categoria);
+      this.consultarProductos(categoria);
+      return;
+    }
+
+    this.cargarProductos();
+  }
 
   cargarCategorias(): void {
     if (this.cargandoCategorias()) {
@@ -66,6 +86,7 @@ export class CatalogoProductosViewModel {
         next: (categorias) => {
           this.categorias.set(categorias);
         },
+
         error: () => {
           this.categorias.set([]);
 
@@ -82,7 +103,8 @@ export class CatalogoProductosViewModel {
   }
 
   seleccionarCategoria(categoria: string): void {
-    const categoriaNormalizada = categoria.trim();
+    const categoriaNormalizada =
+      categoria.trim();
 
     if (!categoriaNormalizada) {
       return;
@@ -92,6 +114,15 @@ export class CatalogoProductosViewModel {
       categoriaNormalizada
     );
 
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        categoria: categoriaNormalizada
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+
     this.consultarProductos(
       categoriaNormalizada
     );
@@ -99,7 +130,31 @@ export class CatalogoProductosViewModel {
 
   verTodos(): void {
     this.categoriaSeleccionada.set(null);
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        categoria: null
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+
     this.consultarProductos(null);
+  }
+
+  abrirDetalle(idProducto: number): void {
+    const categoria =
+      this.categoriaSeleccionada();
+
+    void this.router.navigate(
+      ['/producto', idProducto],
+      {
+        queryParams: categoria
+          ? { categoria }
+          : {}
+      }
+    );
   }
 
   reintentar(): void {
@@ -112,7 +167,9 @@ export class CatalogoProductosViewModel {
     this.cargarCategorias();
   }
 
-  descripcionEsLarga(descripcion: string): boolean {
+  descripcionEsLarga(
+    descripcion: string
+  ): boolean {
     return descripcion.length > 100;
   }
 
@@ -161,9 +218,8 @@ export class CatalogoProductosViewModel {
     const consulta$ =
       categoria === null
         ? this.productoService.obtenerTodos()
-        : this.productoService.obtenerPorCategoria(
-            categoria
-          );
+        : this.productoService
+            .obtenerPorCategoria(categoria);
 
     this.solicitudProductos =
       consulta$
