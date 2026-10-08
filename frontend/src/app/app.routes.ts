@@ -16,6 +16,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'login' }
     ]
   },
+  
   {
     path: '',
     component: MainShell,
@@ -28,6 +29,12 @@ export const routes: Routes = [
           import('./features/catalogo-productos/view/catalogo-productos').then(
             (m) => m.CatalogoProductos,
           ),
+      },
+            {
+        path: 'historial',
+        loadChildren: () =>
+          import('./features/historial-carritos/historial-carritos.routes')
+            .then((m) => m.HISTORIAL_CARRITOS_ROUTES)
       },
       {
         path: 'carrito',
