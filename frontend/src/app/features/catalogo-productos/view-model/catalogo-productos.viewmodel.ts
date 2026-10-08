@@ -1,26 +1,20 @@
-import {
-  DestroyRef,
-  inject,
-  Injectable,
-  signal
-} from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
-import {
-  finalize,
-  Subscription
-} from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
-import {
-  takeUntilDestroyed
-} from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Producto } from '../../../core/models/producto.model';
 import { ProductoService } from '../../../core/services/producto.service';
+import { Router } from '@angular/router';
+import { SessionService } from '../../../core/services/session.service';
 
 @Injectable()
 export class CatalogoProductosViewModel {
   private readonly productoService = inject(ProductoService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
+  private readonly sessionService = inject(SessionService);
 
   private solicitudProductos?: Subscription;
   private numeroSolicitudProductos = 0;
@@ -29,22 +23,23 @@ export class CatalogoProductosViewModel {
 
   readonly categorias = signal<string[]>([]);
 
-  readonly categoriaSeleccionada =
-    signal<string | null>(null);
+  readonly categoriaSeleccionada = signal<string | null>(null);
 
   readonly cargando = signal(false);
 
-  readonly error =
-    signal<string | null>(null);
+  readonly error = signal<string | null>(null);
 
-  readonly cargandoCategorias =
-    signal(false);
+  readonly cargandoCategorias = signal(false);
 
-  readonly errorCategorias =
-    signal<string | null>(null);
+  readonly errorCategorias = signal<string | null>(null);
 
-  readonly descripcionesExpandidas =
-    signal<ReadonlySet<number>>(new Set<number>());
+  readonly descripcionesExpandidas = signal<ReadonlySet<number>>(new Set<number>());
+
+  readonly puedeCrearProductos = this.sessionService.obtener()?.rol === 'Administrador';
+
+  irANuevoProducto(): void {
+    this.router.navigateByUrl('/productos/nuevo');
+  }
 
   cargarCategorias(): void {
     if (this.cargandoCategorias()) {
@@ -58,9 +53,7 @@ export class CatalogoProductosViewModel {
       .obtenerCategorias()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() =>
-          this.cargandoCategorias.set(false)
-        )
+        finalize(() => this.cargandoCategorias.set(false)),
       )
       .subscribe({
         next: (categorias) => {
@@ -69,10 +62,8 @@ export class CatalogoProductosViewModel {
         error: () => {
           this.categorias.set([]);
 
-          this.errorCategorias.set(
-            'No fue posible cargar las categorías. Intenta nuevamente.'
-          );
-        }
+          this.errorCategorias.set('No fue posible cargar las categorías. Intenta nuevamente.');
+        },
       });
   }
 
@@ -88,13 +79,9 @@ export class CatalogoProductosViewModel {
       return;
     }
 
-    this.categoriaSeleccionada.set(
-      categoriaNormalizada
-    );
+    this.categoriaSeleccionada.set(categoriaNormalizada);
 
-    this.consultarProductos(
-      categoriaNormalizada
-    );
+    this.consultarProductos(categoriaNormalizada);
   }
 
   verTodos(): void {
@@ -103,9 +90,7 @@ export class CatalogoProductosViewModel {
   }
 
   reintentar(): void {
-    this.consultarProductos(
-      this.categoriaSeleccionada()
-    );
+    this.consultarProductos(this.categoriaSeleccionada());
   }
 
   reintentarCategorias(): void {
@@ -116,20 +101,12 @@ export class CatalogoProductosViewModel {
     return descripcion.length > 100;
   }
 
-  estaDescripcionExpandida(
-    idProducto: number
-  ): boolean {
-    return this.descripcionesExpandidas()
-      .has(idProducto);
+  estaDescripcionExpandida(idProducto: number): boolean {
+    return this.descripcionesExpandidas().has(idProducto);
   }
 
-  alternarDescripcion(
-    idProducto: number
-  ): void {
-    const actualizadas =
-      new Set(
-        this.descripcionesExpandidas()
-      );
+  alternarDescripcion(idProducto: number): void {
+    const actualizadas = new Set(this.descripcionesExpandidas());
 
     if (actualizadas.has(idProducto)) {
       actualizadas.delete(idProducto);
@@ -137,16 +114,11 @@ export class CatalogoProductosViewModel {
       actualizadas.add(idProducto);
     }
 
-    this.descripcionesExpandidas.set(
-      actualizadas
-    );
+    this.descripcionesExpandidas.set(actualizadas);
   }
 
-  private consultarProductos(
-    categoria: string | null
-  ): void {
-    const numeroSolicitud =
-      ++this.numeroSolicitudProductos;
+  private consultarProductos(categoria: string | null): void {
+    const numeroSolicitud = ++this.numeroSolicitudProductos;
 
     this.solicitudProductos?.unsubscribe();
 
@@ -154,65 +126,45 @@ export class CatalogoProductosViewModel {
     this.error.set(null);
     this.cargando.set(true);
 
-    this.descripcionesExpandidas.set(
-      new Set<number>()
-    );
+    this.descripcionesExpandidas.set(new Set<number>());
 
     const consulta$ =
       categoria === null
         ? this.productoService.obtenerTodos()
-        : this.productoService.obtenerPorCategoria(
-            categoria
-          );
+        : this.productoService.obtenerPorCategoria(categoria);
 
-    this.solicitudProductos =
-      consulta$
-        .pipe(
-          takeUntilDestroyed(
-            this.destroyRef
-          )
-        )
-        .subscribe({
-          next: (productos) => {
-            if (
-              numeroSolicitud !==
-              this.numeroSolicitudProductos
-            ) {
-              return;
-            }
+    this.solicitudProductos = consulta$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (productos) => {
+        if (numeroSolicitud !== this.numeroSolicitudProductos) {
+          return;
+        }
 
-            this.productos.set(productos);
-          },
+        this.productos.set(productos);
+      },
 
-          error: () => {
-            if (
-              numeroSolicitud !==
-              this.numeroSolicitudProductos
-            ) {
-              return;
-            }
+      error: () => {
+        if (numeroSolicitud !== this.numeroSolicitudProductos) {
+          return;
+        }
 
-            this.productos.set([]);
+        this.productos.set([]);
 
-            this.error.set(
-              categoria === null
-                ? 'No fue posible cargar los productos. Intenta nuevamente.'
-                : `No fue posible cargar los productos de ${categoria}. Intenta nuevamente.`
-            );
+        this.error.set(
+          categoria === null
+            ? 'No fue posible cargar los productos. Intenta nuevamente.'
+            : `No fue posible cargar los productos de ${categoria}. Intenta nuevamente.`,
+        );
 
-            this.cargando.set(false);
-          },
+        this.cargando.set(false);
+      },
 
-          complete: () => {
-            if (
-              numeroSolicitud !==
-              this.numeroSolicitudProductos
-            ) {
-              return;
-            }
+      complete: () => {
+        if (numeroSolicitud !== this.numeroSolicitudProductos) {
+          return;
+        }
 
-            this.cargando.set(false);
-          }
-        });
+        this.cargando.set(false);
+      },
+    });
   }
 }

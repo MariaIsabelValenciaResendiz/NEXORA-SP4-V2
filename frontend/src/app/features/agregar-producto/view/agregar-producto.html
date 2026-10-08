@@ -1,0 +1,201 @@
+<section class="agregar-producto">
+  <header class="agregar-producto__encabezado">
+    <h1 class="agregar-producto__titulo">
+      Nuevo producto
+    </h1>
+  </header>
+
+  <form
+    class="agregar-producto__formulario"
+    [formGroup]="vm.formulario"
+    (ngSubmit)="alEnviar()"
+    novalidate
+  >
+
+    <div class="agregar-producto__campo">
+      <label
+        class="agregar-producto__etiqueta"
+        for="titulo"
+      >
+        Título
+      </label>
+
+      <input
+        id="titulo"
+        type="text"
+        class="agregar-producto__control"
+        [class.agregar-producto__control--error]="
+          vm.formulario.controls.titulo.invalid &&
+          vm.formulario.controls.titulo.touched
+        "
+        formControlName="titulo"
+      />
+
+      @if (
+        vm.formulario.controls.titulo.invalid &&
+        vm.formulario.controls.titulo.touched
+      ) {
+        <p class="agregar-producto__error">
+          Revisa este campo
+        </p>
+      }
+    </div>
+
+    <div class="agregar-producto__campo">
+      <label
+        class="agregar-producto__etiqueta"
+        for="precio"
+      >
+        Precio
+      </label>
+
+      <input
+        id="precio"
+        type="number"
+        min="0.01"
+        step="0.01"
+        class="agregar-producto__control"
+        [class.agregar-producto__control--error]="
+          vm.formulario.controls.precio.invalid &&
+          vm.formulario.controls.precio.touched
+        "
+        formControlName="precio"
+      />
+
+      @if (
+        vm.formulario.controls.precio.invalid &&
+        vm.formulario.controls.precio.touched
+      ) {
+        <p class="agregar-producto__error">
+          Revisa este campo
+        </p>
+      }
+    </div>
+
+    <div class="agregar-producto__campo">
+      <label
+        class="agregar-producto__etiqueta"
+        for="categoria"
+      >
+        Categoría
+      </label>
+
+      <select
+        id="categoria"
+        class="agregar-producto__control"
+        [class.agregar-producto__control--error]="
+          vm.formulario.controls.categoria.invalid &&
+          vm.formulario.controls.categoria.touched
+        "
+        formControlName="categoria"
+      >
+        <option value="">
+          Seleccionar
+        </option>
+
+        @for (
+          categoria of vm.categorias();
+          track categoria
+        ) {
+          <option [value]="categoria">
+            {{ categoria }}
+          </option>
+        }
+      </select>
+
+      @if (
+        vm.formulario.controls.categoria.invalid &&
+        vm.formulario.controls.categoria.touched
+      ) {
+        <p class="agregar-producto__error">
+          Revisa este campo
+        </p>
+      }
+    </div>
+
+    <div class="agregar-producto__campo">
+      <label
+        class="agregar-producto__etiqueta"
+        for="imagenUrl"
+      >
+        URL de imagen
+      </label>
+
+      <input
+        id="imagenUrl"
+        type="url"
+        class="agregar-producto__control"
+        [class.agregar-producto__control--error]="
+          vm.formulario.controls.imagenUrl.invalid &&
+          vm.formulario.controls.imagenUrl.touched
+        "
+        formControlName="imagenUrl"
+      />
+
+      @if (
+        vm.formulario.controls.imagenUrl.invalid &&
+        vm.formulario.controls.imagenUrl.touched
+      ) {
+        <p class="agregar-producto__error">
+          Revisa este campo
+        </p>
+      }
+    </div>
+
+    <div class="agregar-producto__campo">
+      <label
+        class="agregar-producto__etiqueta"
+        for="descripcion"
+      >
+        Descripción
+      </label>
+
+      <textarea
+        id="descripcion"
+        rows="4"
+        class="agregar-producto__control agregar-producto__control--textarea"
+        [class.agregar-producto__control--error]="
+          vm.formulario.controls.descripcion.invalid &&
+          vm.formulario.controls.descripcion.touched
+        "
+        formControlName="descripcion"
+        placeholder="Describe el producto"
+      ></textarea>
+
+      @if (
+        vm.formulario.controls.descripcion.invalid &&
+        vm.formulario.controls.descripcion.touched
+      ) {
+        <p class="agregar-producto__error">
+          Revisa este campo
+        </p>
+      }
+    </div>
+
+    @if (vm.mensajeExito()) {
+      <app-status-message
+        [message]="vm.mensajeExito() ?? ''"
+        type="success"
+      />
+    }
+
+    @if (vm.mensajeError()) {
+      <app-status-message
+        [message]="vm.mensajeError() ?? ''"
+        type="error"
+      />
+    }
+
+    <button
+      class="agregar-producto__boton"
+      type="submit"
+      [disabled]="vm.cargando()"
+    >
+      @if (vm.cargando()) {
+        Creando...
+      } @else {
+        Crear producto
+      }
+    </button>
+  </form>
+</section>

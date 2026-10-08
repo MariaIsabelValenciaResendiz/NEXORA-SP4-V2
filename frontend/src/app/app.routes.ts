@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { sesionActivaGuard } from './core/guards/sesion-activa.guard';
 import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { MainShell } from './layouts/main-shell/main-shell';
+import { administradorGuard } from './core/guards/administrador.guard';
 
 export const routes: Routes = [
   {
@@ -11,10 +12,10 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () => import('./features/login/view/login').then(m => m.Login)
+        loadComponent: () => import('./features/login/view/login').then((m) => m.Login),
       },
-      { path: '', pathMatch: 'full', redirectTo: 'login' }
-    ]
+      { path: '', pathMatch: 'full', redirectTo: 'login' },
+    ],
   },
   {
     path: '',
@@ -38,6 +39,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/producto-detalle/view/producto-detalle').then(
             (m) => m.ProductoDetalle,
+          ),
+      },
+      {
+        path: 'productos/nuevo',
+        canActivate: [administradorGuard],
+        loadComponent: () =>
+          import('./features/agregar-producto/view/agregar-producto').then(
+            (m) => m.AgregarProducto,
           ),
       },
     ],
