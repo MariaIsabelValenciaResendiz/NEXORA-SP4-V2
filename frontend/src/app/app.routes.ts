@@ -69,6 +69,10 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/usuarios/usuarios.routes').then((m) => m.USUARIOS_ROUTES),
       },
+      {
+        path: 'cuenta',
+        loadComponent: () => import('./features/cuenta/view/cuenta').then((m) => m.Cuenta),
+      },
     ],
   },
 ];

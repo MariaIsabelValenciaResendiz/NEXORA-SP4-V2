@@ -18,7 +18,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse?>
 
         LoginResponse? respuesta = usuario is null
             ? null
-            : new LoginResponse(usuario.Id, usuario.Nombre, usuario.Rol);
+            : new LoginResponse(
+                usuario.Id,
+                usuario.Nombre,
+                usuario.Rol,
+                usuario.NombreCompleto,
+                usuario.Correo);
 
         return Task.FromResult(respuesta);
     }

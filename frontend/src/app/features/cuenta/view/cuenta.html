@@ -1,0 +1,24 @@
+<section class="cuenta">
+  <h1 class="cuenta__titulo">Mi cuenta</h1>
+
+  <div class="cuenta__perfil">
+    <div class="cuenta__avatar" aria-hidden="true">{{ vm.iniciales }}</div>
+    <p class="cuenta__nombre">{{ vm.nombre }}</p>
+    <p class="cuenta__correo">{{ vm.correo }}</p>
+  </div>
+
+  <dl class="cuenta__datos">
+    <div class="cuenta__fila">
+      <dt>Perfil</dt>
+      <dd>{{ vm.rol }}</dd>
+    </div>
+    <div class="cuenta__fila">
+      <dt>Sesión</dt>
+      <dd>Activa</dd>
+    </div>
+  </dl>
+
+  <button type="button" class="cuenta__cerrar" (click)="vm.cerrarSesion()">
+    Cerrar sesión
+  </button>
+</section>
