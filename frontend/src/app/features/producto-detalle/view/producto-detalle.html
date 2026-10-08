@@ -1,0 +1,83 @@
+<section class="product-detail">
+  <div class="product-detail__heading">
+    <div>
+      <p class="product-detail__eyebrow">NEXORA MARKET</p>
+      <h1>Detalle del producto</h1>
+    </div>
+    <span class="product-detail__role">{{ vm.rol() }}</span>
+  </div>
+
+  @if (vm.cargando()) {
+    <app-feedback-state
+      icon="…"
+      title="Cargando producto"
+      message="Estamos consultando el catálogo de NEXORA."
+    />
+  } @else if (vm.error() && !vm.producto()) {
+    <app-feedback-state
+      icon="!"
+      title="No pudimos cargar"
+      [message]="vm.error()"
+      actionLabel="Reintentar"
+      tone="error"
+      (actionSelected)="vm.cargarProducto()"
+    />
+  } @else if (vm.producto(); as producto) {
+    <article class="product-card">
+      <div class="product-card__visual" aria-hidden="true">
+        <span>{{ producto.categoria }}</span>
+        <strong>{{ producto.nombre.slice(0, 1) }}</strong>
+      </div>
+
+      <div class="product-card__content">
+        <div class="product-card__title-row">
+          <div>
+            <span class="product-card__category">{{ producto.categoria }}</span>
+            <h2>{{ producto.nombre }}</h2>
+          </div>
+          <p class="product-card__price">${{ producto.precio | number:'1.2-2' }}</p>
+        </div>
+
+        <p class="product-card__description">{{ producto.descripcion }}</p>
+        <p class="product-card__stock">Disponibles: {{ producto.stock }}</p>
+
+        @if (vm.mensaje()) {
+          <app-status-message [message]="vm.mensaje()" type="success" />
+        }
+
+        @if (vm.error() && vm.producto()) {
+          <app-status-message [message]="vm.error()" type="error" />
+        }
+
+        @if (vm.rol() === 'Cliente') {
+          <div class="product-card__purchase">
+            <label for="cantidad">Cantidad</label>
+            <div class="quantity-control">
+              <button type="button" aria-label="Disminuir cantidad" (click)="vm.disminuirCantidad()">−</button>
+              <input
+                id="cantidad"
+                type="number"
+                min="1"
+                step="1"
+                [value]="vm.cantidad()"
+                (input)="vm.actualizarCantidad($event)"
+              />
+              <button type="button" aria-label="Aumentar cantidad" (click)="vm.aumentarCantidad()">+</button>
+            </div>
+            <button
+              class="product-card__add"
+              type="button"
+              [disabled]="vm.agregando() || vm.cargando()"
+              (click)="vm.agregarAlCarrito()"
+            >
+              {{ vm.agregando() ? 'Añadiendo…' : 'Añadir al carrito' }}
+            </button>
+            <a class="product-card__cart-link" routerLink="/carrito">Ver mi carrito</a>
+          </div>
+        } @else {
+          <p class="product-card__readonly">El perfil Auditor puede consultar productos, pero no añadirlos al carrito.</p>
+        }
+      </div>
+    </article>
+  }
+</section>

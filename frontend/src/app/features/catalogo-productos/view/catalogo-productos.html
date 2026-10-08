@@ -1,0 +1,222 @@
+<section class="catalogo">
+  <header class="catalogo__header">
+    <h1 class="catalogo__title">
+      Catálogo
+    </h1>
+
+    <p class="catalogo__subtitle">
+      Productos disponibles
+    </p>
+  </header>
+
+  <section
+    class="catalogo__filtros"
+    aria-labelledby="titulo-categorias"
+  >
+    <h2
+      id="titulo-categorias"
+      class="catalogo__filtros-title"
+    >
+      Categorías
+    </h2>
+
+    @if (viewModel.cargandoCategorias()) {
+      <p
+        class="catalogo__categorias-loading"
+        aria-live="polite"
+      >
+        Cargando categorías...
+      </p>
+    } @else {
+      <div
+        class="catalogo__chips"
+        role="group"
+        aria-label="Filtrar productos por categoría"
+      >
+        <button
+          type="button"
+          class="catalogo__chip"
+          [class.catalogo__chip--active]="
+            viewModel.categoriaSeleccionada() === null
+          "
+          [attr.aria-pressed]="
+            viewModel.categoriaSeleccionada() === null
+          "
+          (click)="viewModel.verTodos()"
+        >
+          Ver todos
+        </button>
+
+        @for (
+          categoria of viewModel.categorias();
+          track categoria
+        ) {
+          <button
+            type="button"
+            class="catalogo__chip"
+            [class.catalogo__chip--active]="
+              viewModel.categoriaSeleccionada() === categoria
+            "
+            [attr.aria-pressed]="
+              viewModel.categoriaSeleccionada() === categoria
+            "
+            (click)="
+              viewModel.seleccionarCategoria(categoria)
+            "
+          >
+            {{ categoria }}
+          </button>
+        }
+      </div>
+    }
+
+    @if (viewModel.errorCategorias()) {
+      <div class="catalogo__error-categorias">
+        <app-feedback-state
+          icon="!"
+          title="No pudimos cargar las categorías"
+          [message]="
+            viewModel.errorCategorias() ?? ''
+          "
+          actionLabel="Reintentar"
+          tone="error"
+          (actionSelected)="
+            viewModel.reintentarCategorias()
+          "
+        />
+      </div>
+    }
+  </section>
+
+  @if (viewModel.cargando()) {
+    <section
+      class="catalogo__loading"
+      aria-live="polite"
+      aria-label="Cargando productos"
+    >
+      <div class="catalogo__spinner"></div>
+
+      <p>
+        Cargando productos...
+      </p>
+    </section>
+  } @else if (viewModel.error()) {
+    <app-feedback-state
+      icon="!"
+      title="No pudimos cargar los productos"
+      [message]="viewModel.error() ?? ''"
+      actionLabel="Reintentar"
+      tone="error"
+      (actionSelected)="viewModel.reintentar()"
+    />
+  } @else if (
+    viewModel.productos().length === 0
+  ) {
+
+    @if (
+      viewModel.categoriaSeleccionada() !== null
+    ) {
+      <app-feedback-state
+        icon="i"
+        title="No hay productos disponibles en esta categoría"
+        [message]="
+          'No encontramos productos para ' +
+          (viewModel.categoriaSeleccionada() ?? '') +
+          '.'
+        "
+      />
+    } @else {
+      <app-feedback-state
+        icon="i"
+        title="No hay productos disponibles"
+        message="Actualmente no existen productos para mostrar."
+      />
+    }
+
+  } @else {
+    <div class="catalogo__grid">
+
+      @for (
+        producto of viewModel.productos();
+        track producto.id
+      ) {
+        <article class="product-card">
+
+          <div
+            class="product-card__image-container"
+          >
+            <img
+              class="product-card__image"
+              [src]="
+                producto.imagenUrl ||
+                '/images/producto-placeholder.svg'
+              "
+              [alt]="producto.nombre"
+              loading="lazy"
+              (error)="onImageError($event)"
+            />
+          </div>
+
+          <div class="product-card__content">
+
+            <span
+              class="product-card__category"
+            >
+              {{ producto.categoria }}
+            </span>
+
+            <h2 class="product-card__name">
+              {{ producto.nombre }}
+            </h2>
+
+            <p class="product-card__price">
+              {{
+                producto.precio
+                  | number:'1.2-2'
+              }}
+            </p>
+
+            <p
+              class="product-card__description"
+              [class.product-card__description--expanded]="
+                viewModel.estaDescripcionExpandida(
+                  producto.id
+                )
+              "
+            >
+              {{ producto.descripcion }}
+            </p>
+
+            @if (
+              viewModel.descripcionEsLarga(
+                producto.descripcion
+              )
+            ) {
+              <button
+                type="button"
+                class="product-card__more"
+                (click)="
+                  viewModel.alternarDescripcion(
+                    producto.id
+                  )
+                "
+              >
+                @if (
+                  viewModel.estaDescripcionExpandida(
+                    producto.id
+                  )
+                ) {
+                  Ver menos
+                } @else {
+                  Ver más
+                }
+              </button>
+            }
+
+          </div>
+        </article>
+      }
+
+    </div>
+  }
+</section>

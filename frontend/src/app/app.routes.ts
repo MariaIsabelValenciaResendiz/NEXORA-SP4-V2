@@ -20,6 +20,26 @@ export const routes: Routes = [
     path: '',
     component: MainLayout,
     canActivate: [sesionActivaGuard],
-    children: []
-  }
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'catalogo' },
+      {
+        path: 'catalogo',
+        loadComponent: () =>
+          import('./features/catalogo-productos/view/catalogo-productos').then(
+            (m) => m.CatalogoProductos,
+          ),
+      },
+      {
+        path: 'carrito',
+        loadComponent: () => import('./features/carrito/view/carrito').then((m) => m.Carrito),
+      },
+      {
+        path: 'producto/:id',
+        loadComponent: () =>
+          import('./features/producto-detalle/view/producto-detalle').then(
+            (m) => m.ProductoDetalle,
+          ),
+      },
+    ],
+  },
 ];
